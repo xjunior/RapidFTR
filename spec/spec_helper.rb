@@ -177,6 +177,13 @@ def uploadable_jpg_photo_without_file_extension
   end
 end
 
+def should_create_activity_for(event)
+  activities_before = Activity.by_event(:key => event).length
+  yield
+  activities = Activity.by_event(:key => event)
+  activities.should have(activities_before + 1).items
+  activities.last
+end
 
 def find_child_by_name child_name
   child = Summary.by_name(:key => child_name)

@@ -4,6 +4,26 @@ module LoadsSession
     !get_session.nil?
   end
 
+  def current_user
+    @current_user ||= User.find_by_user_name(current_user_name)
+  end
+
+  def current_user_name
+    session = app_session
+    return session.user_name unless session.nil?
+  end
+
+  def is_admin?
+    session = Session.get_from_cookies(cookies)
+    return session.admin? if session 
+  end
+
+  def is_admin?
+    session = Session.get_from_cookies(cookies)
+    user = User.find_by_user_name session.user_name
+    !user.user_type.eql?('User')
+  end
+
   private
 
   def get_session

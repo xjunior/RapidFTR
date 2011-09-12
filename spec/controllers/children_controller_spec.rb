@@ -373,4 +373,46 @@ describe ChildrenController do
       get :export_photo_to_pdf, :id => '1'
     end
   end
+
+  describe "activity logging" do
+    before do
+      @now = Time.now
+      Time.stub!(:now).and_return(@now)
+    end
+
+    it 'should log the activity on each child added' do
+      activity = should_create_activity_for "children/create" do
+        post :create, :child => {
+          :age => 10,
+          :name => "Vitor Baptista",
+          :nickname => "Vitinho"
+        }
+      end
+
+      activity.child_id.should_not be_nil
+      activity.created_at.to_s.should == @now.to_s
+    end
+
+    it 'should log the activity when a child is updated' do
+      child = Child.create('last_known_location' => "London", 'photo' => uploadable_photo)
+
+      activity = should_create_activity_for "children/update" do
+        put :update, :id => child.to_param, :child => { }
+      end
+
+      activity.child_id.should == child.id
+      activity.created_at.to_s.should == @now.to_s
+    end
+
+    it 'should log the activity when a child is deleted' do
+      child = Child.create('last_known_location' => "London", 'photo' => uploadable_photo)
+
+      activity = should_create_activity_for "children/destroy" do
+        delete :destroy, :id => child.to_param
+      end
+
+      activity.child_id.should == child.id
+      activity.created_at.to_s.should == @now.to_s
+    end
+  end
 end

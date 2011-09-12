@@ -13,17 +13,16 @@ class Login
   end
 
   def authenticate_user
-    user = User.find_by_user_name(@user_name)
-    if (user and user.authenticate(@password))  
-      session = Session.for_user( user, @imei ) 
-    end
+    user = User.find_by_user_name(@user_name) or return
+    if user.authenticate(@password)
+      session = Session.for_user(user, @imei)
+      if @imei 
+        user.add_mobile_login_event(@imei, @mobile_number)
+        user.save
+      end
 
-    if session and @imei 
-      user.add_mobile_login_event(@imei, @mobile_number)
-      user.save
+      return session
     end
-
-    session
   end
 
   def errors

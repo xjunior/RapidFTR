@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   include LoadsSession
 
   skip_before_filter :check_authentication, :only => %w{new create active}
+  after_filter :register_activity, :only => [:create], :if => :logged_in?
 
   protect_from_forgery :except => %w{create}
 
@@ -61,7 +62,7 @@ class SessionsController < ApplicationController
     respond_to do |format|
       if @session.save
         @session.put_in_cookie(cookies)
-        flash[:notice] = 'Hello ' + @session.user_name
+        flash[:notice] = "Hello #{@session.user_name}"
         format.html { redirect_to(root_path) }
         format.xml  { render :action => "show", :status => :created, :location => @session }
         format.json { render_session_as_json(@session,:status => :created, :location => @session) }

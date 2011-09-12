@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
 
   rescue_from( ErrorResponse ) { |e| render_error_response(e) }
 
+  helper_method :current_user, :logged_in?, :is_admin?
+
   def render_error_response(ex)
     @exception = ex
  
@@ -42,10 +44,6 @@ class ApplicationController < ActionController::Base
   end
 
   # TODO Remove duplication in ApplicationHelper
-  def current_user_name
-    session = app_session
-    return session.user_name unless session.nil?
-  end
 
   def send_pdf(pdf_data,filename) 
     send_data pdf_data, :filename => filename, :type => "application/pdf"
@@ -71,6 +69,20 @@ class ApplicationController < ActionController::Base
       session.update_expiration_time(20.minutes.from_now)
       session.save
     end
+  end
+
+  def current_imei
+    session = get_session
+    session.nil?? "" : session.imei
+  end
+
+  def register_activity(data={})
+    Activity.create({
+      :user_name => current_user_name,
+      :ip_address => request.ip,
+      :event => "#{params[:controller]}/#{params[:action]}",
+      :imei => current_imei
+    }.merge(data))
   end
 
   ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|

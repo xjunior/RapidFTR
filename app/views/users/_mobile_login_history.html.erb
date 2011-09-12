@@ -8,7 +8,7 @@
       </tr>
 
 
-    <% @user.mobile_login_history.reverse.each do |event| %>
+    <% mobile_login_history.reverse.each do |event| %>
       <tr>
         <td><%= event[:timestamp].in_time_zone(@user.time_zone) %></td>
         <td><%= event[:imei] %></td>

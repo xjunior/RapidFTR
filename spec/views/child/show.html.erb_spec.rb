@@ -12,6 +12,9 @@ describe "children/show.html.erb" do
       @child = Child.new(:name => "fakechild", :age => "27", :gender => "male", :date_of_separation => "1-2 weeks ago", :unique_identifier => "georgelon12345", :_id => "id12345", :created_by => 'jsmith', :created_at => "July 19 2010 13:05:32UTC")
       @child.stub!(:has_one_interviewer?).and_return(true)
 
+      template.stub(:current_user_name).and_return('tim')
+      template.stub(:is_admin?).and_return(true)
+
       assigns[:form_sections] = [@form_section]
       assigns[:child] = @child
       assigns[:user] = User.new

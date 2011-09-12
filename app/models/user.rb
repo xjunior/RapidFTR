@@ -49,7 +49,6 @@ class User < CouchRestRails::Document
   validates_presence_of :full_name,:message=>"Please enter full name of the user"
   validates_presence_of :user_type,:message=>"Please choose a user type"
 
-
   validates_format_of :user_name,:with => /^[^ ]+$/, :message=>"Please enter a valid user name"
   validates_format_of :password,:with => /^[^ ]+$/, :message=>"Please enter a valid password", :if => :new?
 
@@ -57,11 +56,9 @@ class User < CouchRestRails::Document
   
   validates_format_of :email, :with =>  /^([^@\s]+)@((?:[-a-zA-Z0-9]+\.)+[a-zA-Z]{2,})$/, :if => :email_entered?,
                       :message =>"Please enter a valid email address"
-  
 
   validates_confirmation_of :password, :if => :password_required?
   validates_with_method   :user_name, :method => :is_user_name_unique
-
 
   def self.find_by_user_name(user_name)
      User.by_user_name(:key => user_name.downcase).first
@@ -108,6 +105,10 @@ class User < CouchRestRails::Document
   
   def devices
     Device.all.select { |device| device.user_name == self.user_name }
+  end
+
+  def activities
+    @activities ||= Activity.by_user_name(:key => user_name)
   end
   
   def devices= device_hashes

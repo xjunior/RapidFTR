@@ -2,6 +2,7 @@ class ChildrenController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   before_filter :load_child_or_redirect, :only => [:show, :edit, :destroy, :edit_photo, :update_photo, :export_photo_to_pdf]
+  after_filter :register_activity_with_child, :only => [:destroy, :update, :create]
 
   # GET /children
   # GET /children.xml
@@ -25,8 +26,6 @@ class ChildrenController < ApplicationController
   # GET /children/1
   # GET /children/1.xml
   def show
-    @user = User.find_by_user_name(current_user_name)
-
     @form_sections = get_form_sections
 
     @page_name = @child
@@ -237,6 +236,10 @@ class ChildrenController < ApplicationController
       flash[:error] = "Child with the given id is not found"
       redirect_to :action => :index and return
     end
+  end
+
+  def register_activity_with_child
+    register_activity(:child_id => params[:id] || @child.id)
   end
 
 end
