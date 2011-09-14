@@ -25,6 +25,10 @@ class Activity < CouchRestRails::Document
     @device ||= Device.by_imei(:key => imei).first
   end
 
+  def child
+    @child ||= Child.get(child_id)
+  end
+
   def user
     @user ||= User.find_by_user_name(user_name)
   end

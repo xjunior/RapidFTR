@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from( ErrorResponse ) { |e| render_error_response(e) }
 
-  helper_method :current_user, :logged_in?, :is_admin?
+  helper_method :current_user, :current_user_name, :logged_in?, :is_admin?
 
   def render_error_response(ex)
     @exception = ex

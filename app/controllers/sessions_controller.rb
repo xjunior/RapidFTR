@@ -10,7 +10,6 @@ class SessionsController < ApplicationController
   # GET /sessions/1
   # GET /sessions/1.xml
   def show
-    #logger.debug( cookies.inspect )
     logger.debug( "Authorization header: #{request.headers['Authorization']}" )
     @session = Session.get(params[:id])
 

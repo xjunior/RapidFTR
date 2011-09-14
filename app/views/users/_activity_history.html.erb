@@ -3,12 +3,14 @@
     <table>
       <tr>
           <th>Timestamp</th>
-          <th>IMEI</th>
+          <th>Activity</th>
       </tr>
       <% activity_history.each do |activity| %>
-      <tr>
+      <tr id="activity_<%=activity.id%>">
         <td><%= activity.created_at.in_time_zone(current_user.time_zone) %></td>
-        <td><%= activity.imei %></td>
+        <td>
+          <%= user_activity_display(activity) %>
+        </td>
       </tr>
       <% end %>
     </table>

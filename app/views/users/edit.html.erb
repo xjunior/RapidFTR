@@ -2,7 +2,4 @@
 
 <%= render :partial => "edittable_user", :object => @user %>
 
-<% if is_admin? %>
-  <%= render :partial => "mobile_login_history", :object => @user.mobile_login_history %>
-  <%= render :partial => "activity_history", :object => @user.activities %>
-<% end %>
+<%= render :partial => "activity_history", :object => @user.activities if is_admin? %>

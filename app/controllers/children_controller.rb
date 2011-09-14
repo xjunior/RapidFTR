@@ -3,6 +3,7 @@ class ChildrenController < ApplicationController
 
   before_filter :load_child_or_redirect, :only => [:show, :edit, :destroy, :edit_photo, :update_photo, :export_photo_to_pdf]
   after_filter :register_activity_with_child, :only => [:destroy, :update, :create]
+  before_filter :register_activity_for_sync, :only => [:index]
 
   # GET /children
   # GET /children.xml
@@ -240,6 +241,10 @@ class ChildrenController < ApplicationController
 
   def register_activity_with_child
     register_activity(:child_id => params[:id] || @child.id)
+  end
+
+  def register_activity_for_sync
+    register_activity if request.format.json?
   end
 
 end

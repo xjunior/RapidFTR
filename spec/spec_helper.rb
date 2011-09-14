@@ -178,11 +178,17 @@ def uploadable_jpg_photo_without_file_extension
 end
 
 def should_create_activity_for(event)
-  activities_before = Activity.by_event(:key => event).length
+  activities_before = Activity.by_event(:key => event).count
   yield
   activities = Activity.by_event(:key => event)
   activities.should have(activities_before + 1).items
   activities.last
+end
+
+def should_not_create_activity_for(event)
+  activities_before = Activity.by_event(:key => event).count
+  yield
+  Activity.by_event(:key => event).count.should == activities_before
 end
 
 def find_child_by_name child_name
@@ -190,7 +196,6 @@ def find_child_by_name child_name
   raise "no child named '#{child_name}'" if child.nil?
   child.first
 end
-
 
 CouchRestRails::Tests.setup
 

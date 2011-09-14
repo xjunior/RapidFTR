@@ -414,5 +414,19 @@ describe ChildrenController do
       activity.child_id.should == child.id
       activity.created_at.to_s.should == @now.to_s
     end
+
+    it 'should log the activity when synchronizing only from a BlackBerry device' do
+      activity = should_create_activity_for "children/index" do
+        get :index, :format => "json"
+      end
+
+      activity.created_at.to_s.should == @now.to_s
+    end
+
+    it 'should not log activities for sync when request doesn\' come from a BlackBerry' do
+      should_not_create_activity_for "children/index" do
+        get :index, :format => "html"
+      end
+    end
   end
 end

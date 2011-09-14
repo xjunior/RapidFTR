@@ -15,18 +15,7 @@ describe "users/edit.html.erb" do
       template.stub(:current_user).and_return(user)
 
       render
-
-      response.should have_tag(".device-information") do
-        with_tag("th", /Timestamp/)
-        with_tag("th", /IMEI/)
-        with_tag("th", /Mobile Number/)
-      end
-
-      response.should have_tag(".device-information") do
-        with_tag("td", /2010-01-20 01:04:24 -1100/)
-        with_tag("td", /1234/)
-        with_tag("td", /01234 56789/)
-      end
+      
     end
   end
 end

@@ -1,0 +1,5 @@
+<% if activity.imei %>
+	<%= activity.user.user_name %> logged in from a device. IMEI Address: <%= activity.imei %>
+<% else %>
+	<%= activity.user.user_name %> logged in from the web. IP Address: <%= activity.ip_address %>
+<% end %>
